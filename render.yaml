@@ -1,0 +1,35 @@
+# Render Blueprint for the Stock Pulse upload bundle.
+# It creates one free web service. Render asks for the two values marked
+# "sync: false" and generates the third.
+
+services:
+  - type: web
+    name: stock-pulse
+    runtime: node
+    plan: free
+    # unpack.mjs recreates the app under ./app. There is nothing to install.
+    buildCommand: node unpack.mjs
+    startCommand: node app/server.js
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+      # Listen on the address Render routes traffic to.
+      - key: HOST
+        value: 0.0.0.0
+      # Render always serves HTTPS, so the session cookie is always marked Secure.
+      - key: COOKIE_SECURE
+        value: "1"
+      # The free plan wipes the disk on every sleep, so saved answers stay in memory.
+      - key: CACHE_PERSIST
+        value: "0"
+      # The password you will sign in with. At least 8 characters.
+      - key: ACCESS_PASSWORD
+        sync: false
+      # Your free key from https://adanos.org
+      - key: ADANOS_API_KEY
+        sync: false
+      # Signs the session cookie. Generated once, so you stay signed in across sleeps.
+      - key: SESSION_SECRET
+        generateValue: true

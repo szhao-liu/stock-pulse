@@ -1,0 +1,13 @@
+{
+  "name": "stock-pulse-deploy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Upload bundle for Stock Pulse. unpack.mjs writes the app into ./app",
+  "engines": {
+    "node": ">=20 <23"
+  },
+  "scripts": {
+    "build": "node unpack.mjs",
+    "start": "node app/server.js"
+  }
+}
